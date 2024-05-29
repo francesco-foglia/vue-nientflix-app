@@ -2,8 +2,8 @@
   <div class="2xl:container mx-auto px-[5%] py-10">
     <Title />
     <SearchBar @search="handleSearch" @clear="handleClear" />
-    <div v-if="movies.length > 0 && !isLoading" id="app" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
-      <div v-for="movie in movies" :key="movie.id" class="card relative w-full h-[450px] group">
+    <div v-if="movies.length > 0 && !isLoading" id="app" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-center">
+      <div v-for="movie in movies" :key="movie.id" class="card relative w-full max-w-[300px] h-[450px] mx-auto group">
         <img
           v-lazy="'https://image.tmdb.org/t/p/w500' + movie.poster_path" :alt="movie.original_title"
           class="absolute top-0 left-0 w-full h-full object-cover object-center group-hover:opacity-0 transition-all duration-500"

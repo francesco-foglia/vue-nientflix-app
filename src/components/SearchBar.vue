@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center mt-5 mb-7">
-    <div class="relative mr-[10px]">
+  <div class="flex justify-between mt-5 mb-7 mx-auto max-w-[300px]">
+    <div class="relative mr-[10px] w-full">
       <input
         type="text"
         v-model="query"
@@ -40,6 +40,7 @@
     padding-right: 32px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: 100%;
   }
 
   button {
@@ -51,5 +52,6 @@
     padding: 0.5em 1em;
     background-color: #E50914;
     border-radius: 4px;
+    max-width: 45px;
   }
 </style>

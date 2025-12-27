@@ -13,4 +13,16 @@
     letter-spacing: 0.1em;
     margin: 0;
   }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+  }
+
+  @media (max-width: 320px) {
+    h1 {
+      font-size: 2rem;
+    }
+  }
 </style>

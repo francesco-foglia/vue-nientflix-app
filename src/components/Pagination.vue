@@ -1,16 +1,16 @@
 <template>
-  <div class="text-center mt-10">
-    <button @click="changePage(1)" :disabled="currentPage === 1">
+  <div class="flex flex-nowrap justify-center items-center gap-4 mt-10 w-full overflow-hidden">
+    <button @click="changePage(1)" :disabled="currentPage === 1" class="shrink-0">
       <i class="fa-solid fa-angles-left"></i>
     </button>
-    <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">
+    <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="shrink-0">
       <i class="fa-solid fa-angle-left"></i>
     </button>
-    <span>{{ currentPage }} / {{ totalPages }}</span>
-    <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">
+    <span class="mx-1 whitespace-nowrap text-sm">{{ currentPage }} / {{ totalPages }}</span>
+    <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="shrink-0">
       <i class="fa-solid fa-angle-right"></i>
     </button>
-    <button @click="changePage(totalPages)" :disabled="currentPage === totalPages">
+    <button @click="changePage(totalPages)" :disabled="currentPage === totalPages" class="shrink-0">
       <i class="fa-solid fa-angles-right"></i>
     </button>
   </div>
@@ -40,12 +40,13 @@
 
 <style scoped>
   button {
-    margin: 0.3rem;
-    padding: 0.3em 0.7em;
+    margin: 0;
+    padding: 0.3em 0.5em;
     border: none;
     background-color: #E50914;
     color: white;
     cursor: pointer;
+    border-radius: 4px;
   }
 
   button:focus {
@@ -58,6 +59,6 @@
   }
 
   span {
-    margin: 0 1em;
+    margin: 0;
   }
 </style>

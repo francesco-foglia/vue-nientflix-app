@@ -3,9 +3,11 @@
     <div class="relative mr-[10px] w-full">
       <input
         type="text"
+        id="search-input"
+        name="search"
         v-model="query"
         @keyup.enter="search"
-        placeholder="Search for movies..."
+        placeholder="Search..."
       />
       <button v-if="query" @click="clearSearch" class="absolute top-1/2 right-[10px] -translate-y-1/2">
         <i class="fa-solid fa-xmark"></i>

@@ -1,17 +1,17 @@
 <template>
-  <div class="2xl:container mx-auto px-4 md:px-[5%] py-10">
+  <div class="app-wrapper">
     <Title />
 
-    <div class="flex flex-col mb-6 items-center w-full">
+    <div class="controls-section">
       <SearchBar @search="handleSearch" @clear="handleClear" class="w-full max-w-[300px]" />
 
-      <div class="flex flex-col md:flex-row flex-wrap gap-4 w-full justify-center items-center">
+      <div class="selects-row">
         <select
           id="type-select"
           name="type"
           v-model="selectedType"
           @change="handleTypeChange"
-          class="bg-[#242424] text-white border border-gray-600 rounded px-4 py-2 focus:outline-none focus:border-red-600 w-full max-w-[300px] md:max-w-[276px]"
+          class="md-select"
         >
           <option value="movie">Movies</option>
           <option value="tv">TV Series</option>
@@ -22,7 +22,7 @@
           name="genre"
           v-model="selectedGenre"
           @change="handleGenreChange"
-          class="bg-[#242424] text-white border border-gray-600 rounded px-4 py-2 focus:outline-none focus:border-red-600 w-full max-w-[300px] md:max-w-[276px]"
+          class="md-select"
         >
           <option :value="null">All Genres</option>
           <option v-for="genre in genres" :key="genre.id" :value="genre.id">
@@ -32,22 +32,22 @@
       </div>
     </div>
 
-    <div v-if="content.length > 0 && !isLoading" id="app" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full justify-center">
-      <div v-for="item in content" :key="item.id" class="card relative w-full max-w-[300px] h-[450px] mx-auto group">
+    <div v-if="content.length > 0 && !isLoading" class="cards-grid">
+      <div v-for="item in content" :key="item.id" class="card group">
         <img
           v-lazy="item.poster_path ? 'https://image.tmdb.org/t/p/w500' + item.poster_path : 'https://placehold.co/300x450/000000/FFFFFF/png?text=No+Image'"
           :alt="item.title || item.name"
-          class="absolute top-0 left-0 w-full h-full object-cover object-center group-hover:opacity-0 transition-all duration-500"
+          class="card-img"
         >
-        <div class="card-content p-4 absolute top-0 left-0 w-full h-full max-h-full overflow-auto bg-[#242424] opacity-0 group-hover:opacity-100 transition-all duration-500">
+        <div class="card-content">
           <h3 class="card-title" v-html="(item.original_language !== 'en' ? (item.title || item.name) : (item.original_title || item.original_name))"></h3>
-          <p class="text-sm text-gray-400 mb-2">{{ getYear(item.release_date || item.first_air_date) }}</p>
+          <p class="card-year">{{ getYear(item.release_date || item.first_air_date) }}</p>
           <p class="card-overview" v-html="item.overview !== '' ? item.overview : 'No description available'"></p>
           <VoteAverage :rating="item.vote_average" />
         </div>
       </div>
     </div>
-    <p v-else-if="!isLoading" class="text-center text-xl mt-10">No content found</p>
+    <p v-else-if="!isLoading" class="no-content">No content found</p>
     <Pagination v-if="content.length > 0" :currentPage="currentPage" :totalPages="totalPages" @change-page="changePage" />
     <Spinner v-if="isLoading" />
   </div>
@@ -180,40 +180,176 @@
   });
 </script>
 
+
 <style scoped>
-  #app {
-    font-family: Arial, sans-serif;
+  /* ── Layout ────────────────────────────────────────────── */
+  .app-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px 12px 48px;
+    text-align: center;
   }
 
+  .controls-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .selects-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .selects-row {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  /* ── Material Select ────────────────────────────────────── */
+  .md-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--md-surface-2);
+    color: var(--md-on-surface);
+    border: none;
+    border-bottom: 2px solid var(--md-border);
+    border-radius: var(--md-radius-s) var(--md-radius-s) 0 0;
+    padding: 10px 36px 10px 14px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    width: 100%;
+    max-width: 300px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.6)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .md-select:focus {
+    border-bottom-color: var(--md-primary);
+  }
+  .md-select option {
+    background-color: var(--md-surface-2);
+    color: var(--md-on-surface);
+  }
+
+  /* ── Cards Grid ────────────────────────────────────────── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    width: 100%;
+    justify-items: center;
+  }
+
+  @media (max-width: 479px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Material Card ─────────────────────────────────────── */
   .card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 450px;
+    border-radius: var(--md-radius-l);
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--md-elevation-4);
+    background-color: var(--md-surface);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--md-elevation-8);
+    transform: translateY(-2px);
+  }
+
+  .card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: opacity 0.45s ease;
+  }
+
+  .group:hover .card-img {
+    opacity: 0;
+  }
+
+  .card-content {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    background-color: var(--md-surface);
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  .group:hover .card-content {
+    opacity: 1;
   }
 
   .card-title {
-    font-size: 1.25em;
-    margin: 0;
-    margin-bottom: 8px;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--md-on-surface);
+    margin: 0 0 6px;
+    line-height: 1.4;
+  }
+
+  .card-year {
+    font-size: 0.8125rem;
+    color: var(--md-on-surface-2);
+    margin: 0 0 10px;
   }
 
   .card-overview {
-    font-size: 1em;
-    color: grey;
+    font-size: 0.875rem;
+    color: var(--md-on-surface-2);
+    line-height: 1.55;
+    margin: 0 0 12px;
   }
 
+  /* ── Scrollbar ─────────────────────────────────────────── */
   .card-content::-webkit-scrollbar {
-    width: 5px;
+    width: 4px;
   }
-
   .card-content::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-    border-radius: 5px;
+    background: var(--md-surface);
+    border-radius: 4px;
+  }
+  .card-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
   }
 
-  .card-content::-webkit-scrollbar-thumb {
-    background: grey;
-    border-radius: 5px;
+  /* ── No content ────────────────────────────────────────── */
+  .no-content {
+    text-align: center;
+    font-size: 1.125rem;
+    color: var(--md-on-surface-2);
+    margin-top: 48px;
+    letter-spacing: 0.01em;
   }
 </style>
+
